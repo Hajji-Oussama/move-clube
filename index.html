@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="نادي الأفلام في التكوين المهني أكادير - عش السينما كل سبت!">
+    <meta name="keywords" content="أفلام, سينما, أكادير, تكوين مهني, نادي الأفلام">
+    <meta name="author" content="نادي الأفلام أكادير">
+    <title>نادي الأفلام أكادير - عش السينما كل سبت!</title>
+    <link rel="icon" type="image/x-icon" href="https://e.top4top.io/p_3558cjg1p1.png">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CDN for jsPDF and html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+         :root {
+            --primary: #e50914;
+            --primary-dark: #b2070f;
+            --dark: #0f0f0f;
+            --darker: #000000;
+            --light: #f5f5f1;
+            --gray: #b3b3b1;
+            --success: #46d369;
+            --gold: #ffd700;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            --glow: 0 0 20px rgba(229, 9, 20, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'El Messiri', 'Roboto', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        }
+        /* Scrollbar Styling */
+        
+         ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        /* Fade-in animation */
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(229, 9, 20, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .slide-left {
+            animation: slideInFromLeft 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .slide-right {
+            animation: slideInFromRight 1s ease-out forwards;
+            opacity: 0;
+        }
+        /* Header Styles */
+        
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        header.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            padding: 1rem 5%;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo span {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.7);
+        }
+        
+        .logo i {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            font-size: 1.1rem;
+            padding: 0.5rem 0;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+            box-shadow: var(--glow);
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        /* Hero Section */
+        
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+            background: linear-gradient(to right, #f5f5f1, #e50914);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 3s infinite;
+        }
+        
+        .hero p {
+            font-size: 1.8rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            animation: glow 2s infinite;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::after {
+            left: 100%;
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--light);
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            z-index: 1;
+        }
+        
+        @keyframes bounce {
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+        /* Section Styles */
+        
+        section {
+            padding: 6rem 5%;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: var(--primary);
+            border-radius: 5px;
+            box-shadow: var(--glow);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* About Section */
+        
+        .about {
+            background: linear-gradient(to bottom, var(--dark) 0%, #1a1a1a 100%);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .about-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(229, 9, 20, 0.2), transparent);
+            z-index: 1;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        /* Movie Section */
+        
+        .movie {
+            background: linear-gradient(to bottom, #1a1a1a 0%, var(--dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .movie::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1489599809505-f2d4c3f1ddb6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .movie-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+        
+        .movie-info {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .movie-poster {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .movie-poster::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(229, 9, 20, 0.2), transparent);
+            z-index: 1;
+        }
+        
+        .movie-poster img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .movie-poster:hover img {
+            transform: scale(1.05);
+        }
+        
+        .movie-details {
+            flex: 2;
+        }
+        
+        .movie-details h3 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .movie-details p {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .movie-meta {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(30, 30, 30, 0.8);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .meta-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .meta-item i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .trailer-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .trailer-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Contest Section */
+        
+        .contest {
+            background: linear-gradient(to bottom, var(--dark) 0%, #1a1a1a 100%);
+        }
+        
+        .contest-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .contest-form {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contest-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            box-shadow: var(--glow);
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+            text-align: right;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--gray);
+            background: var(--darker);
+            color: var(--light);
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+            outline: none;
+        }
+        
+        .success-message {
+            background: rgba(70, 211, 105, 0.2);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            display: none;
+            border: 2px solid var(--success);
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .success-message i {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+        /* Tickets Section */
+        
+        .tickets {
+            background: linear-gradient(to bottom, #1a1a1a 0%, var(--dark) 100%);
+            text-align: center;
+        }
+        
+        .tickets-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(30, 30, 30, 0.8);
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tickets-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            box-shadow: var(--glow);
+        }
+        
+        .price-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+        
+        .price {
+            font-size: 4rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .discount-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            margin-top: 1rem;
+        }
+        
+        .counter {
+            font-size: 1.5rem;
+            margin: 2rem 0;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .counter i {
+            font-size: 2rem;
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.3rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            margin-top: 1rem;
+        }
+        
+        .whatsapp-btn:hover {
+            background: #128C7E;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        /* Info Section */
+        
+        .info {
+            background: linear-gradient(to bottom, var(--dark) 0%, #1a1a1a 100%);
+        }
+        
+        .info-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+        
+        .info-table {
+            flex: 1;
+            min-width: 350px;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .info-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .info-table th,
+        .info-table td {
+            padding: 1.5rem;
+            text-align: right;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .info-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .info-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .map-container {
+            flex: 1;
+            min-width: 350px;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Previous Movies */
+        
+        .previous-movies {
+            background: linear-gradient(to bottom, #1a1a1a 0%, var(--dark) 100%);
+        }
+        
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .movie-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+        
+        .movie-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            z-index: 1;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .movie-card:hover::before {
+            opacity: 1;
+        }
+        
+        .movie-card img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .movie-card:hover img {
+            transform: scale(1.1);
+        }
+        
+        .movie-card-content {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .rating {
+            color: var(--gold);
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .rating span {
+            color: var(--light);
+            font-weight: 600;
+        }
+        /* Footer */
+        
+        footer {
+            background: var(--darker);
+            padding: 4rem 5% 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            box-shadow: var(--glow);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-logo {
+            flex: 1;
+            min-width: 300px;
+            text-align: right;
+        }
+        
+        .footer-logo .logo {
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .footer-links h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-right: 0.5rem;
+        }
+        
+        .footer-social {
+            flex: 1;
+            min-width: 300px;
+            text-align: left;
+        }
+        
+        .footer-social h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: flex-start;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--dark);
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+        
+        .terms {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray);
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        /* Responsive Design */
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 5%;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                padding: 1rem 0;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            }
+            nav ul.active {
+                display: flex;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            .hero p {
+                font-size: 1.4rem;
+            }
+            .about-content,
+            .movie-info {
+                flex-direction: column;
+            }
+            .movie-meta {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .info-content {
+                flex-direction: column;
+            }
+            section {
+                padding: 4rem 5%;
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+            .price {
+                font-size: 3rem;
+            }
+            .original-price {
+                font-size: 1.5rem;
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-logo,
+            .footer-social {
+                text-align: center;
+            }
+            .social-links {
+                justify-content: center;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            .about-content,
+            .movie-info {
+                flex-direction: column;
+            }
+            .info-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-film"></i> نادي <span>الأفلام</span>
+        </a>
+        <nav>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul>
+                <li><a href="#home">الرئيسية</a></li>
+                <li><a href="#about">عن النادي</a></li>
+                <li><a href="#movie">الفيلم</a></li>
+                <li><a href="#contest">المسابقة</a></li>
+                <li><a href="#tickets">التذاكر</a></li>
+                <li><a href="#info">المعلومات</a></li>
+                <li><a href="#previous">أفلام سابقة</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="fade-in">عش السينما كل سبت!</h1>
+            <p class="fade-in">انضم إلينا في رحلة سينمائية فريدة من نوعها في نادي الأفلام بمقر التكوين المهني بأكادير</p>
+            <a href="#about" class="btn fade-in">اكتشف المزيد</a>
+        </div>
+        <a href="#about" class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h2 class="section-title fade-in">عن النادي</h2>
+        <p class="section-subtitle fade-in">مكان حيث تلتقي الثقافة بالترفيه، والفن بالتعلم</p>
+        <div class="about-content">
+            <div class="about-text slide-right">
+                <h3>رحلتنا السينمائية</h3>
+                <p>نادي الأفلام هو مبادرة ثقافية تابعة لمقر التكوين المهني بأكادير، تهدف إلى نشر الثقافة السينمائية بين المتدربين وتعزيز الوعي الفني والثقافي. ننظم عروضاً سينمائية أسبوعية كل يوم سبت، مع مناقشات حول الأفلام وورش عمل حول صناعة السينما.</p>
+                <p>نؤمن بأن السينما ليست مجرد ترفيه، بل وسيلة قوية للتعبير والتعلم وفهم الثقافات المختلفة. نرحب بجميع المتدربين الراغبين في الانضمام إلى عالم السينما والاستمتاع بتجربة فريدة من نوعها.</p>
+                <p>من خلال عروضنا المتنوعة، نقدم أفلاماً من مختلف الثقافات والأنواع، مما يوسع آفاق المشاهدين ويثري تجربتهم السينمائية.</p>
+            </div>
+            <div class="about-image slide-left">
+                <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="مقر التكوين المهني أكادير">
+            </div>
+        </div>
+    </section>
+
+    <!-- Movie Section -->
+    <section id="movie" class="movie">
+        <h2 class="section-title fade-in">فيلم هذا الأسبوع</h2>
+        <p class="section-subtitle fade-in">فيلم استثنائي سيأخذك في رحلة إلى أعماق العقل البشري</p>
+        <div class="movie-content">
+            <div class="movie-info">
+                <div class="movie-poster slide-right">
+                    <img src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg" alt="غلاف فيلم Inception">
+                </div>
+                <div class="movie-details slide-left">
+                    <h3>Inception (النشوة)</h3>
+                    <p>فيلم خيال علمي وإثارة من إخراج كريستوفر نولان. يروي قصة دوم كوب (ليوناردو دي كابريو)، لص ماهر في سرقة الأفكار من العقول أثناء النوم. يُعرض عليه مهمة مستحيلة: زرع فكرة في عقل شخص بدلاً من سرقتها. هذه المهمة قد تكون فرصة لاستعادة حياته
+                        السابقة، لكنها قد تكلّفه كل شيء.</p>
+                    <p>انضم إلينا في رحلة استثنائية عبر طبقات الأحلام، حيث يصبح الواقع والحلم غير قابلين للتمييز، وتتحدى القوانين الأساسية للفيزياء والمنطق.</p>
+                    <div class="movie-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-user"></i>
+                            <span>كريستوفر نولان</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>148 دقيقة</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-film"></i>
+                            <span>+13</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="trailer-container fade-in">
+                <iframe src="https://www.youtube.com/embed/YoHD9XEInc0" title="Inception Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contest Section -->
+    <section id="contest" class="contest">
+        <h2 class="section-title fade-in">مسابقة هذا الأسبوع</h2>
+        <p class="section-subtitle fade-in">أجب عن السؤال التالي واحصل على تذكرة مجانية لحضور العرض!</p>
+        <div class="contest-content">
+            <div class="contest-form fade-in">
+                <h3>ما هو اسم الممثل الذي لعب دور البطولة في فيلم Inception؟</h3>
+                <p>شارك في مسابقتنا واربح تذكرة مجانية لحضور العرض الحصري. يمكنك البحث عن الإجابة على الإنترنت!</p>
+                <form id="contestForm">
+                    <div class="form-group">
+                        <label for="movieAnswer">اسم الممثل:</label>
+                        <input type="text" id="movieAnswer" placeholder="اكتب اسم الممثل هنا..." required>
+                    </div>
+                    <button type="submit" class="btn">أرسل الإجابة</button>
+                </form>
+                <div id="successMessage" class="success-message">
+                    <i class="fas fa-trophy"></i>
+                    <h3>تهانينا! لقد أجبت بشكل صحيح</h3>
+                    <p>تم إنشاء تذكرتك المجانية بنجاح. يمكنك الآن تحميلها وحضور العرض مجاناً!</p>
+                    <button id="downloadTicket" class="btn" style="margin-top: 1rem;">تنزيل التذكرة</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tickets Section -->
+    <section id="tickets" class="tickets">
+        <h2 class="section-title fade-in">احجز تذكرتك الآن</h2>
+        <p class="section-subtitle fade-in">لا تفوت فرصة حضور عرض سينمائي استثنائي</p>
+        <div class="tickets-content fade-in">
+            <h3>تذكرة العرض السينمائي</h3>
+            <p>احجز تذكرتك الآن واستمتع بتجربة سينمائية فريدة معنا</p>
+            <div class="price-container">
+                <span class="original-price">50 درهم</span>
+                <div class="price">20 درهم</div>
+                <div class="discount-badge">خصم 60%</div>
+            </div>
+            <div class="counter">
+                <i class="fas fa-ticket-alt"></i>
+                <span>المتبقي: <span id="ticketCounter">50</span> تذكرة فقط</span>
+            </div>
+            <a href="https://wa.me/212669324997?text=أرغب%20في%20حجز%20تذكرة%20لعرض%20السبت%20السينمائي" class="whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> احجز عبر الواتساب
+            </a>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section id="info" class="info">
+        <h2 class="section-title fade-in">معلومات العرض</h2>
+        <p class="section-subtitle fade-in">كل ما تحتاج معرفته لحضور العرض</p>
+        <div class="info-content">
+            <div class="info-table fade-in">
+                <table>
+                    <tr>
+                        <th>التفاصيل</th>
+                        <th>المعلومات</th>
+                    </tr>
+                    <tr>
+                        <td>الوقت</td>
+                        <td>كل سبت الساعة 18:00</td>
+                    </tr>
+                    <tr>
+                        <td>المكان</td>
+                        <td>مقر التكوين المهني، أكادير</td>
+                    </tr>
+                    <tr>
+                        <td>السعر</td>
+                        <td>20 درهم (خصم للمتدربين)</td>
+                    </tr>
+                    <tr>
+                        <td>القواعد</td>
+                        <td>
+                            <ul style="text-align: right; padding-right: 1.5rem;">
+                                <li>الحضور قبل 15 دقيقة من العرض</li>
+                                <li>ممنوع إدخال الطعام والشراب</li>
+                                <li>الهاتف يجب أن يكون في الوضع الصامت</li>
+                                <li>احترام الآخرين وعدم إحداث ضوضاء</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="map-container fade-in">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3452.898423337303!2d-9.59575838480248!3d30.42773628164587!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xdafba0c6c7c8b0d%3A0x3d9e7e9d5e5e5e5e!2sInstitut%20Sp%C3%A9cialis%C3%A9%20de%20Technologie%20Appliqu%C3%A9e%20-%20Agadir!5e0!3m2!1sen!2sma!4v1687654321098!5m2!1sen!2sma"
+                    allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Previous Movies -->
+    <section id="previous" class="previous-movies">
+        <h2 class="section-title fade-in">أفلام سابقة</h2>
+        <p class="section-subtitle fade-in">استعرض بعض الأفلام الرائعة التي عرضناها سابقاً</p>
+        <div class="movies-grid">
+            <div class="movie-card fade-in">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg" alt="The Dark Knight">
+                <div class="movie-card-content">
+                    <h3>فارس الظلام</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>9.0/10</span>
+                    </div>
+                    <p>فيلم بطل خارق أمريكي من إخراج كريستوفر نولان، يتناول معركة باتمان ضد الجوكر الذي يهدد بغرق غوثام في الفوضى.</p>
+                </div>
+            </div>
+            <div class="movie-card fade-in">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTYxNDA3MDQwNl5BMl5BanBnXkFtZTcwNTU4Mzc3Nw@@._V1_.jpg" alt="Shutter Island">
+                <div class="movie-card-content">
+                    <h3>جزيرة شاتر</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <span>8.2/10</span>
+                    </div>
+                    <p>فيلم غموض وإثارة نفسي أمريكي من إخراج مارتن سكورسيزي، يتبع تحقيق مارشال أمريكي في اختفاء مريضة من مصحة نفسية.</p>
+                </div>
+            </div>
+            <div class="movie-card fade-in">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_.jpg" alt="Avengers: Endgame">
+                <div class="movie-card-content">
+                    <h3>المنتقمون: نهاية اللعبة</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>8.4/10</span>
+                    </div>
+                    <p>فيلم خيال علمي وأكشن أمريكي من إنتاج مارفل ستوديوز، يجمع الأبطال الخارقين في معركة نهائية ضد ثانوس.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <a href="#" class="logo">
+                    <i class="fas fa-film"></i> نادي <span>الأفلام</span>
+                </a>
+                <p>نادي الأفلام - التكوين المهني أكادير<br>مكان حيث تلتقي الثقافة بالترفيه، والفن بالتعلم</p>
+            </div>
+            <div class="footer-links">
+                <h3>روابط سريعة</h3>
+                <ul>
+                    <li><a href="#home">الرئيسية</a></li>
+                    <li><a href="#about">عن النادي</a></li>
+                    <li><a href="#movie">الفيلم</a></li>
+                    <li><a href="#contest">المسابقة</a></li>
+                    <li><a href="#tickets">التذاكر</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h3>تابعنا على</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="terms">
+            <p>التزام بقانون البيع المغربي، خصوصية البيانات محمية. جميع الحقوق محفوظة لنادي الأفلام - التكوين المهني أكادير © 2023</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in, .slide-left, .slide-right');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                        if (entry.target.classList.contains('slide-left')) {
+                            entry.target.style.transform = 'translateX(0)';
+                        }
+                        if (entry.target.classList.contains('slide-right')) {
+                            entry.target.style.transform = 'translateX(0)';
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Mobile menu toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('nav ul');
+
+            menuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking on a link
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                });
+            });
+
+            // Ticket counter
+            let ticketsLeft = 50;
+            const counterElement = document.getElementById('ticketCounter');
+
+            // Update counter every 30 seconds to simulate sales
+            setInterval(() => {
+                if (ticketsLeft > 0 && Math.random() > 0.7) {
+                    ticketsLeft--;
+                    counterElement.textContent = ticketsLeft;
+
+                    // Add pulse animation when counter updates
+                    counterElement.parentElement.style.animation = 'none';
+                    setTimeout(() => {
+                        counterElement.parentElement.style.animation = 'pulse 0.5s ease';
+                    }, 10);
+                }
+            }, 30000);
+
+            // Contest form handling
+            const contestForm = document.getElementById('contestForm');
+            const successMessage = document.getElementById('successMessage');
+            const downloadTicketBtn = document.getElementById('downloadTicket');
+
+            contestForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const answer = document.getElementById('movieAnswer').value.trim().toLowerCase();
+
+                // Check if answer is correct (case-insensitive)
+                if (answer === 'ليوناردو دي كابريو' || answer === 'leonardo dicaprio' || answer.includes('دي كابريو') || answer.includes('dicaprio')) {
+                    successMessage.style.display = 'block';
+                    contestForm.style.display = 'none';
+
+                    // Generate ticket
+                    downloadTicketBtn.addEventListener('click', generateTicket);
+                } else {
+                    alert('الإجابة غير صحيحة. حاول مرة أخرى!');
+                }
+            });
+
+            // Generate PDF ticket
+            function generateTicket() {
+                const {
+                    jsPDF
+                } = window.jspdf;
+
+                // Create a new jsPDF instance
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a5'
+                });
+
+                // Set document properties
+                doc.setProperties({
+                    title: 'تذكرة نادي الأفلام',
+                    subject: 'تذكرة مجانية لحضور فيلم Inception',
+                    author: 'نادي الأفلام - التكوين المهني أكادير',
+                    keywords: 'تذكرة, فيلم, نادي الأفلام, أكادير',
+                    creator: 'نادي الأفلام'
+                });
+
+                // Add background color
+                doc.setFillColor(15, 15, 15);
+                doc.rect(0, 0, 148, 210, 'F');
+
+                // Add header with logo
+                doc.setFillColor(229, 9, 20);
+                doc.rect(0, 0, 148, 25, 'F');
+
+                // Add logo text
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.text('نادي الأفلام', 74, 15, {
+                    align: 'center'
+                });
+
+                // Add subtitle
+                doc.setFontSize(12);
+                doc.text('التكوين المهني - أكادير', 74, 22, {
+                    align: 'center'
+                });
+
+                // Add ticket title
+                doc.setTextColor(229, 9, 20);
+                doc.setFontSize(24);
+                doc.text('تذكرة مجانية', 74, 45, {
+                    align: 'center'
+                });
+
+                // Add decorative line
+                doc.setDrawColor(229, 9, 20);
+                doc.setLineWidth(1);
+                doc.line(30, 50, 118, 50);
+
+                // Add ticket details
+                doc.setTextColor(245, 245, 241);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'normal');
+
+                // Film details
+                doc.text('فيلم: Inception (النشوة)', 20, 70);
+                doc.text(`التاريخ: ${new Date().toLocaleDateString('ar-MA')}`, 20, 80);
+                doc.text('الوقت: 18:00', 20, 90);
+                doc.text('المكان: التكوين المهني - أكادير', 20, 100);
+
+                // Generate random code
+                const randomCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+                doc.text(`كود التذكرة: ${randomCode}`, 20, 110);
+
+                // Add QR code placeholder
+                doc.setFillColor(50, 50, 50);
+                doc.rect(90, 65, 45, 45, 'F');
+
+                doc.setTextColor(150, 150, 150);
+                doc.setFontSize(10);
+                doc.text('رمز الاستجابة السريعة', 112.5, 85, {
+                    align: 'center'
+                });
+                doc.text('QR Code', 112.5, 92, {
+                    align: 'center'
+                });
+
+                // Add terms and conditions
+                doc.setTextColor(179, 179, 177);
+                doc.setFontSize(9);
+                doc.text('شروط الاستخدام:', 74, 130, {
+                    align: 'center'
+                });
+                doc.text('• التذكرة صالحة لعرض واحد فقط', 74, 137, {
+                    align: 'center'
+                });
+                doc.text('• يرجى الحضور قبل 15 دقيقة من بداية العرض', 74, 144, {
+                    align: 'center'
+                });
+                doc.text('• التذكرة غير قابلة للاسترداد أو التحويل', 74, 151, {
+                    align: 'center'
+                });
+
+                // Add footer
+                doc.setDrawColor(229, 9, 20);
+                doc.setLineWidth(0.5);
+                doc.line(10, 190, 138, 190);
+
+                doc.setTextColor(179, 179, 177);
+                doc.setFontSize(8);
+                doc.text('شكراً لانضمامك إلينا في رحلتنا السينمائية', 74, 195, {
+                    align: 'center'
+                });
+                doc.text('نادي الأفلام - التكوين المهني أكادير © 2023', 74, 200, {
+                    align: 'center'
+                });
+
+                // Add decorative border
+                doc.setDrawColor(229, 9, 20);
+                doc.setLineWidth(1);
+                doc.rect(5, 5, 138, 200);
+
+                // Save the PDF
+                doc.save('تذكرة_نادي_الأفلام.pdf');
+            }
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('nav a, .scroll-down').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
